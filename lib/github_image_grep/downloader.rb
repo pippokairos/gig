@@ -52,7 +52,11 @@ module GithubImageGrep
     end
 
     def search_repository_uri
-      URI("#{GITHUB_API_HOST}/search/repositories?q=#{args.join("+")}")
+      uri = "#{GITHUB_API_HOST}/search/repositories?q=#{args.join("+")}"
+      [:page, :per_page].each do |pagination_option|
+        uri += "&#{pagination_option}=#{options[pagination_option]}" if options[pagination_option]
+      end
+      URI(uri)
     end
 
     def call_github_endpoint

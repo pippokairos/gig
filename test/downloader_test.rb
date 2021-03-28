@@ -4,6 +4,9 @@ class DownloaderTest < Minitest::Test
   def test_search_repository_uri
     assert_equal "https://api.github.com/search/repositories?q=topic:ruby+topic:rails",
       downloader(["topic:ruby", "topic:rails"]).send(:search_repository_uri).to_s
+
+    assert_equal "https://api.github.com/search/repositories?q=topic:test&page=2&per_page=30",
+      downloader(["topic:test"], { page: 2, per_page: 30 }).send(:search_repository_uri).to_s
   end
 
   def test_folder_path

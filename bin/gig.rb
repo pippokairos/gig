@@ -27,6 +27,14 @@ options = {}.tap do |options|
     option.on("--github-access-token=TOKEN", "Set your GitHub access token to perform an authorized call") do |value|
       options[:github_authentication] = value
     end
+
+    option.on("--per-page=PER_PAGE", "Define pagination size") do |value|
+      options[:per_page] = value
+    end
+
+    option.on("--page=PAGE", "Request specific page") do |value|
+      options[:page] = value
+    end
   end.parse!
 end
 
