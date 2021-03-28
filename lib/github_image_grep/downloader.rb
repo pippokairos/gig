@@ -21,7 +21,12 @@ module GithubImageGrep
       res = call_github_endpoint
       case res
       when Net::HTTPForbidden
-        log("Forbidden: you may have exceeded GitHub API rate limit. Try again later.", level: :error)
+        message = "403 Forbidden: you may have exceeded GitHub API rate limit. Try again later"
+        message += " or authenticate on GitHub and pass your github-access-token" unless options[:github_authentication]
+        message += "."
+        log(message, level: :error)
+      when Net::HTTPUnauthorized
+        log("401 Unauthorized error. Please, verify your GitHub access token is correct", level: :error)
       when Net::HTTPSuccess
         log("Repositories' info fetched", verbose_only: true)
 
@@ -66,9 +71,10 @@ module GithubImageGrep
       log("Calling GitHub API")
       uri = search_repository_uri(args)
       log(uri.to_s, verbose_only: true)
-      request = Net::HTTP::Get.new(uri, {
-        "accept" => "application/vnd.github.v3+json"
-      })
+
+      headers = { "accept" => "application/vnd.github.v3+json" }
+      headers["Authorization"] = "Bearer #{options[:github_authentication]}" if options[:github_authentication]
+      request = Net::HTTP::Get.new(uri, headers)
 
       Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
         http.request(request)

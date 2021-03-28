@@ -23,6 +23,10 @@ options = {}.tap do |options|
     option.on("-oFILE", "--output-file=FILE", "Set custom output file instead of STDOUT for logging") do |value|
       options[:output_file] = value
     end
+
+    option.on("--github-access-token=TOKEN", "Set your GitHub access token to perform an authorized call") do |value|
+      options[:github_authentication] = value
+    end
   end.parse!
 end
 
