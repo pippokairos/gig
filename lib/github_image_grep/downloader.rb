@@ -65,20 +65,19 @@ module GithubImageGrep
       end
     end
 
-    def search_repository_uri(args)
+    def search_repository_uri
       URI("#{GITHUB_API_HOST}/search/repositories?q=#{args.join("+")}")
     end
 
     def call_github_endpoint
       log("Calling GitHub API")
-      uri = search_repository_uri(args)
-      log(uri.to_s, verbose_only: true)
+      log(search_repository_uri.to_s, verbose_only: true)
 
       headers = { "accept" => "application/vnd.github.v3+json" }
       headers["Authorization"] = "Bearer #{options[:github_authentication]}" if options[:github_authentication]
-      request = Net::HTTP::Get.new(uri, headers)
+      request = Net::HTTP::Get.new(search_repository_uri, headers)
 
-      Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      Net::HTTP.start(search_repository_uri.hostname, search_repository_uri.port, use_ssl: true) do |http|
         http.request(request)
       end
     end
