@@ -9,3 +9,5 @@ measurement/*
 pkg/*
 .DS_Store
 .env
+tmp/*
+.byebug_history

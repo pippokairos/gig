@@ -1,8 +1,8 @@
-require File.expand_path("lib/gig/version", __dir__)
+require File.expand_path("lib/github_image_grep/version", __dir__)
 
 Gem::Specification.new do |spec|
   spec.name        = "gig"
-  spec.version     = GitHubImageGrep::VERSION
+  spec.version     = GithubImageGrep::VERSION
   spec.licenses    = ["MIT"]
   spec.summary     = "Sample gem that can download profile images from GitHub repositories"
   spec.description = "Command line tool using the public GitHub API to download and save avatar images from repository owners matching the
@@ -21,4 +21,6 @@ provided search criteria."
                        "Gemfile",
                        "Rakefile"
                       ]
+
+  spec.add_development_dependency "byebug"
 end
