@@ -60,7 +60,7 @@ module GithubImageGrep
     end
 
     def call_github_endpoint
-      log("Calling GitHub API")
+      log("Calling GitHub API...")
       log(search_repository_uri.to_s, verbose_only: true)
 
       headers = { "accept" => "application/vnd.github.v3+json" }
@@ -73,6 +73,8 @@ module GithubImageGrep
     end
 
     def save_images(res)
+      log("Saving images...")
+
       # Create the directory if it doesn't exist yet
       FileUtils.mkdir_p(folder_path)
 
@@ -85,13 +87,19 @@ module GithubImageGrep
           end
         end
       end
+
+      log("All images saved")
     end
 
     def save_image(remote_file, destination)
-      return if File.file?(destination) && (Time.now - File.mtime(destination) <= IMAGES_VALIDITY)
-
-      File.open(destination, "wb") do |local_file|
-        local_file.write(remote_file.read)
+      if File.file?(destination) && (Time.now - File.mtime(destination) <= IMAGES_VALIDITY)
+        log("Image #{destination} already present, skipping", verbose_only: true)
+        return
+      else
+        log("Saving #{destination} ...", verbose_only: true)
+        File.open(destination, "wb") do |local_file|
+          local_file.write(remote_file.read)
+        end
       end
     end
 
