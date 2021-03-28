@@ -27,6 +27,8 @@ module GithubImageGrep
         log(message, level: :error)
       when Net::HTTPUnauthorized
         log("401 Unauthorized error. Please, verify your GitHub access token is correct", level: :error)
+      when Net::HTTPUnprocessableEntity, Net::HTTPServiceUnavailable
+        log({ status: res.code, message: JSON.parse(res.body) }, level: :error)
       when Net::HTTPSuccess
         log("Repositories' info fetched", verbose_only: true)
 
