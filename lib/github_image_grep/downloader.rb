@@ -7,6 +7,7 @@ require "logger"
 module GithubImageGrep
   class Downloader
     GITHUB_API_HOST = "https://api.github.com".freeze
+    IMAGES_VALIDITY = 60 * 60 # One hour, in seconds
 
     attr_accessor :args, :options
 
@@ -83,6 +84,8 @@ module GithubImageGrep
     end
 
     def save_image(remote_file, destination)
+      return if File.file?(destination) && (Time.now - File.mtime(destination) <= IMAGES_VALIDITY)
+
       File.open(destination, "wb") do |local_file|
         local_file.write(remote_file.read)
       end
