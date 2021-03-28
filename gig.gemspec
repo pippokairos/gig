@@ -23,4 +23,5 @@ provided search criteria."
                       ]
 
   spec.add_development_dependency "byebug"
+  spec.add_development_dependency "minitest"
 end
