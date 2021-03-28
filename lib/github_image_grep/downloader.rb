@@ -31,22 +31,7 @@ module GithubImageGrep
         log({ status: res.code, message: JSON.parse(res.body) }, level: :error)
       when Net::HTTPSuccess
         log("Repositories' info fetched", verbose_only: true)
-
-        # Create the directory if it doesn't exist yet
-        FileUtils.mkdir_p(folder_path)
-
-        body = JSON.parse(res.body)
-        body["items"].each do |item|
-          avatar_url = item.dig("owner", "avatar_url")
-          if avatar_url
-            log("Fetching #{avatar_url}", verbose_only: true)
-            open(avatar_url) do |remote_file|
-              File.open("#{folder_path}/#{file_name(avatar_url)}.png", "wb") do |local_file|
-                local_file.write(remote_file.read)
-              end
-            end
-          end
-        end
+        save_images(res)
       else
         message = JSON.parse(res.body)["message"] rescue nil
         log({ code: res.code, message: message, body: res.body }, level: :error)
@@ -82,12 +67,37 @@ module GithubImageGrep
       end
     end
 
+    def save_images(res)
+      # Create the directory if it doesn't exist yet
+      FileUtils.mkdir_p(folder_path)
+
+      body = JSON.parse(res.body)
+      body["items"].each do |item|
+        if url = avatar_url(item)
+          log("Fetching #{url}", verbose_only: true)
+          open(url) do |remote_file|
+            save_image(remote_file, "#{folder_path}/#{file_name(url)}.png")
+          end
+        end
+      end
+    end
+
+    def save_image(remote_file, destination)
+      File.open(destination, "wb") do |local_file|
+        local_file.write(remote_file.read)
+      end
+    end
+
     def folder_path
       "#{options[:images_folder]}/" + args.join("-")
     end
 
-    def file_name(avatar_url)
-      avatar_url.split("/").last.split("?").first
+    def avatar_url(item)
+      item.dig("owner", "avatar_url")
+    end
+
+    def file_name(url)
+      url.split("/").last.split("?").first
     end
   end
 end
