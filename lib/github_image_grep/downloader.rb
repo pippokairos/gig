@@ -73,7 +73,7 @@ module GithubImageGrep
     end
 
     def save_images(res)
-      log("Saving images into #{folder_path}...")
+      log("Saving images into #{folder_path} ...")
 
       # Create the directory if it doesn't exist yet
       FileUtils.mkdir_p(folder_path)
