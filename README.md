@@ -40,11 +40,6 @@ $ ruby bin/gig.rb topic:banana topic:fun
 <td>Get verbose logging</td>
 </tr>
 
-<tr> 
-<td>`cd [-options] [path/to/directory]`</td>
-<td>Changes the current working directory to the specified directory</td>
-</tr>
-
 <tr>
 <td>`-f, --images-folder`</td>
 <td>Set custom folder for the images</td>
