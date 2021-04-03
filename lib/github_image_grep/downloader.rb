@@ -73,7 +73,7 @@ module GithubImageGrep
     end
 
     def save_images(res)
-      log("Saving images...")
+      log("Saving images into #{folder_path}...")
 
       # Create the directory if it doesn't exist yet
       FileUtils.mkdir_p(folder_path)
@@ -104,7 +104,7 @@ module GithubImageGrep
     end
 
     def folder_path
-      "#{options[:images_folder]}/" + args.join("-")
+      "#{options[:images_folder] || "."}/" + args.join("-")
     end
 
     def avatar_url(item)
